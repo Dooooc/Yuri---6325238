@@ -1,4 +1,4 @@
-import UserModel from "../../Models/UserModel.js";
+import postgres from '../../../database/connections/postgres.js';
 
 export default async function CreateUserController(request, response) {
     try {
@@ -10,7 +10,7 @@ export default async function CreateUserController(request, response) {
             error.push("name obrigatório!");
         }
 
-        if (!email) {
+        if (!name || !email) {
             error.push("email obrigatório!");
         }
 
@@ -18,23 +18,16 @@ export default async function CreateUserController(request, response) {
             return response.status(400).json({ error: error });
         }
 
-        const user = await UserModel.create({
-            name: name,
-            email: email
-        });
-
-        return response.status(201).json(user);
+        const result = await postgres.query(
+            'INSERT INTO users (name, email) VALUES ($1, $2) RETURNING *',
+            [name, email]
+        );
+        return response.status(201).json(result.rows[0]);
     } catch (error) {
         console.error(error);
-
-        if (error.name === "SequelizeUniqueConstraintError") {
-            return response.status(409).json({
-                error: error.errors[0].message
-            });
+        if (error.code === '23505') { // unique violation
+            return response.status(409).json({ error: error.detail });
         }
-
-        return response.status(500).json({
-            error: "Internal server error"
-        });
+        return response.status(500).json({ error: 'Internal server error' });
     }
 }

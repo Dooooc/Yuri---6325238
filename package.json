@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "scripts": {
     "start": "node _web.js",
-    "dev": "./node_modules/.bin/nodemon _web.js"
+    "dev": "nodemon _web.js"
   },
   "type": "module",
   "author": "Luan Tavares",
@@ -13,8 +13,7 @@
     "chalk": "^5.6.2",
     "dotenv": "^17.4.2",
     "express": "^5.2.1",
-    "pg": "^8.20.0",
-    "sequelize": "^6.37.8"
+    "pg": "^8.20.0"
   },
   "devDependencies": {
     "nodemon": "^3.1.14"

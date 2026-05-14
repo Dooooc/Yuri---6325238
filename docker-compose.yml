@@ -14,8 +14,11 @@ services:
     depends_on:
       - postgres-container
     environment:
-      POSTGRES_HOST: postgres_host
-      POSTGRES_PORT: 5432
+      - PORT=3000
+      - DB_HOST=postgres_host
+      - DB_PORT=5432
+      - NGINX_PORT=8080
+      - IS_DOCKER=true
     restart: unless-stopped
     networks:
       app-network:
